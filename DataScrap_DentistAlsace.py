@@ -9,21 +9,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 
-# Créer une instance du navigateur Chrome
-#driver = webdriver.Chrome(executable_path=chrome_driver_path)
+# Creating an instance of the Chrome browser
+
 df = pd.read_csv('/Users/mac/Desktop/Stage/Dentiste_alsace/dentistes_mulhouse.csv')
 
 
 path="/Users/mac/Desktop/chromedriver"
 service= Service(executable_path=path)
 driver = webdriver.Chrome(service=service)
-# Ouvrir Google Maps
+# Opening google maps
 driver.get("https://www.google.fr/maps/")
 
-# Attendre que la page se charge
+# Waiting for the page to load
 time.sleep(1)
 
-# Accepter les cookies
+# Accepting cookies
 cookies_button = driver.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]/div/div/button/span')
 cookies_button.click()
 time.sleep(1)
@@ -34,15 +34,15 @@ df_final = pd.DataFrame(columns=["name", "star", "review", "response"])
 for dentist,adress in zip(dentists,adresses):
     driver.get("https://www.google.fr/maps/")
 
-# Attendre que la page se charge
+# Waiting for the page to load
     time.sleep(1)
 
-# Accepter les cookies
+
 
     
 
 
-# Rechercher les dentistes en Alsace
+# Searching for dentists in Alsace
     search_box = driver.find_element(By.XPATH, '//*[@id="searchboxinput"]')
     search_box.send_keys(dentist+" "+adress)
     search_box.send_keys(Keys.RETURN)
@@ -117,11 +117,11 @@ for dentist,adress in zip(dentists,adresses):
         star_value = stars.get('aria-label')
         name_value = names.text
     
-    # Si l'index dépasse la longueur de la liste des commentaires, cela signifie que le commentaire est vide
+   # If the index exceeds the length of the comments list, it means the comment is empty
         if index < len(review_all):
             review_value = review_all[index].text
         else:
-            review_value = ""  # Pour les commentaires vides, nous ajoutons une chaîne vide
+            review_value = ""  # For empty comments, we add an empty string
 
         if index < len(response_all)  :
 
@@ -163,6 +163,6 @@ else :
 
     
 
-# Enregistrer la DataFrame finale dans un fichier CSV
+# Save the final DataFrame to a CSV file
 df_final.to_csv("com's_mulhouse.csv", index=False)       
                 

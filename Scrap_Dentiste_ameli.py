@@ -8,41 +8,41 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd 
 
-# Créer une instance du navigateur Chrome
-#driver = webdriver.Chrome(executable_path=chrome_driver_path)
+#Create an instance of the Chrome browser.
+
 path="/Users/mac/Desktop/chromedriver"
 service= Service(executable_path=path)
 driver = webdriver.Chrome(service=service)
-# Ouvrir Google Maps
+# Open Google Maps
 driver.get("https://annuairesante.ameli.fr/trouver-un-professionnel-de-sante/chirurgiens-dentistes/68-haut-rhin-mulhouse")
 
-# Attendre que la page se charge
+# Wait for the page to load
 time.sleep(2)
 noms_dentistes = []
 adresses_dentistes = []
 while True:
-    # Recherche de tous les éléments contenant les noms des dentistes sur la page actuelle
+    # Searching for all elements containing the names of dentists on the current page
     nom_dentists = driver.find_elements(By.CLASS_NAME, 'nom_pictos')
     adress = driver.find_elements(By.CLASS_NAME, 'item.left.adresse')
     
     
-    # Impression des noms des dentistes sur la page actuelle
+    # Printing the names of dentists on the current page"
     for dentist,adress in zip( nom_dentists,adress):
         
         noms_dentistes.append(dentist.text)
         adresses_dentistes.append(adress.text)
     
-    # Recherche de l'élément correspondant à la page suivante
+    # Finding the element corresponding to the next page
     try:
         page_suivante = driver.find_element(By.XPATH, '//a[./img[contains(@alt, "Page suivante")]]')
         
-        # Si l'élément de la page suivante est trouvé, cliquez dessus pour passer à la page suivante
+        #If the element for the next page is found, click on it to navigate to the next page."
         page_suivante.click()
         
-        # Attente de quelques secondes pour que la nouvelle page se charge complètement
+        # Waiting for a few seconds for the new page to fully load
         time.sleep(2)
     except NoSuchElementException:
-        # Si l'élément de la page suivante n'est pas trouvé, cela signifie que nous sommes arrivés à la dernière page
+        # If the element for the next page is not found, it means we have reached the last page
         break
     
 df = pd.DataFrame({
@@ -50,7 +50,7 @@ df = pd.DataFrame({
     "Adresse du dentiste": adresses_dentistes
 })
 
-# Enregistrement du DataFrame dans un fichier CSV
+# Saving the DataFrame to a CSV file
 df.to_csv("dentistes_mulhouse.csv", index=False)
 
     
